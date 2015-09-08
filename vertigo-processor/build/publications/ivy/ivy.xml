@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+  <info organisation="co.sanduche" module="codecgen" revision="1.0-SNAPSHOT" status="integration" publication="20150906165009"/>
+  <configurations>
+    <conf name="default" visibility="public" extends="runtime"/>
+    <conf name="runtime" visibility="public"/>
+  </configurations>
+  <publications>
+    <artifact name="codecgen" type="jar" ext="jar" conf="runtime"/>
+  </publications>
+  <dependencies>
+    <dependency org="com.google.auto.service" name="auto-service" rev="1.0-rc2" conf="runtime-&gt;default"/>
+  </dependencies>
+</ivy-module>

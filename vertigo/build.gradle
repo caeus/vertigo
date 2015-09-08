@@ -1,0 +1,23 @@
+group 'co.sanduche'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+
+
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+dependencies {
+    compile 'org.mongodb:mongo-java-driver:3.0.2'
+}
