@@ -13,6 +13,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -24,11 +25,11 @@ import java.util.stream.Collectors;
  * Created by caeus on 6/09/15.
  */
 @AutoService(Processor.class)
-public class CodecGenProcessor extends AbstractProcessor {
+public class VertigoProcessor extends AbstractProcessor {
     private final Configuration configuration;
     private final Template template;
 
-    public CodecGenProcessor() throws IOException {
+    public VertigoProcessor() throws IOException {
         this.configuration = new Configuration(new Version(2, 3, 23));
         ClassLoader classLoader = this.getClass().getClassLoader();
 
@@ -38,10 +39,8 @@ public class CodecGenProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println("annotations = " + annotations);
         annotations.forEach(typeElement -> {
             Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(typeElement);
-            System.out.println("elementsAnnotatedWith.size() = " + elementsAnnotatedWith.size());
             elementsAnnotatedWith
                     .stream().filter(element -> element instanceof TypeElement)
                     .map(element -> (TypeElement) element)
@@ -51,14 +50,10 @@ public class CodecGenProcessor extends AbstractProcessor {
     }
 
     private Pair<TypeElement, CodecModel> genModel(TypeElement e) {
-
+        Types types = processingEnv.getTypeUtils();
         CodecModel cm = new CodecModel();
-        System.out.println("cm = " + cm);
         cm.setClassName(e.getSimpleName().toString());
-        System.out.println("cm = " + cm);
         cm.setPackageName(((PackageElement) e.getEnclosingElement()).getQualifiedName().toString());
-        System.out.println("cm = " + cm);
-
         Map<String, RichField> richFields = new HashMap<>();
         e.getEnclosedElements().stream()
                 .map(element -> element)
@@ -77,7 +72,6 @@ public class CodecGenProcessor extends AbstractProcessor {
                         } else {
                             return false;
                         }
-
                     } else if (element instanceof VariableElement) {
                         return true;
                     } else {
@@ -111,24 +105,23 @@ public class CodecGenProcessor extends AbstractProcessor {
 
                     }
                 });
-
         cm.setFields(richFields.entrySet().stream()
-                .map(stringRichFieldEntry -> {
-                    RichField value = stringRichFieldEntry.getValue();
-                    value.setName(stringRichFieldEntry.getKey());
+                .map(nameField -> {
+                    RichField value = nameField.getValue();
+                    value.setName(nameField.getKey());
                     return value;
                 })
                 .filter(richField -> richField.isValid())
                 .map(richField -> {
                     FieldModel fieldModel = new FieldModel();
                     fieldModel.setName(richField.getName());
-                    fieldModel.setClazz(richField.getField().asType().toString());
+                    String clazz = types.erasure(richField.getField().asType()).toString();
+                    System.out.println("clazzWithErasure = " + clazz);
+                    fieldModel.setClazz(clazz);
                     fieldModel.setGetter(richField.getGetter().getSimpleName().toString());
                     fieldModel.setSetter(richField.getSetter().getSimpleName().toString());
                     return fieldModel;
                 }).collect(Collectors.toList()));
-        System.out.println("cm = " + cm);
-
         return new Pair<>(e, cm);
 
     }
@@ -140,11 +133,12 @@ public class CodecGenProcessor extends AbstractProcessor {
             JavaFileObject jo = processingEnv.getFiler().createSourceFile(codecModel.getPackageName() + "." + codecModel.getClassName() + "$$Codec", typeElement);
             Writer writer = jo.openWriter();
             template.process(codecModel,writer);
+            writer.close();
             StringWriter sWriter = new StringWriter();
             template.process(codecModel,sWriter);
             sWriter.close();
-            System.out.println("sWriter = " + sWriter);
-            writer.close();
+            System.out.println(sWriter);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

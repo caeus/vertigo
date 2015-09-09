@@ -7,13 +7,14 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import co.sanduche.mongo.SanducheCodec;
+import co.sanduche.vertigo.codecs.VertigoCodec;
+import co.sanduche.vertigo.codecs.VertigoCodecProvider;
 
+//HEY F2!!
+public class ${className}$$Codec extends VertigoCodec<${className}>{
 
-public class ${className}$$Codec extends SanducheCodec<${className}>{
-
-    public ${className}$$Codec(CodecRegistry codecRegistry){
-        super(codecRegistry);
+    public ${className}$$Codec(CodecRegistry codecRegistry,VertigoCodecProvider vertigoCodecProvider){
+        super(codecRegistry,vertigoCodecProvider);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class ${className}$$Codec extends SanducheCodec<${className}>{
         bsonWriter.writeStartDocument();
         <#if fields?size gt 0>
         <#list fields as field>
-        writeValue(bsonWriter,target,target.${field.getter}(),encoderContext);
+        writeProperty(bsonWriter,target,"${field.name}",target.${field.getter}(),encoderContext.getChildContext());
         </#list>
         </#if>
         bsonWriter.writeEndDocument();

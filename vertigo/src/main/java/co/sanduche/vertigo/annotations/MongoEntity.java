@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
  * Created by caeus on 6/09/15.
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface MongoEntity {
 }
