@@ -12,7 +12,15 @@ libraryDependencies ++= Seq("co.sanduche" % "vertigo" % "{version}" ,
   "co.sanduche" % "vertigo-processor" % "{version}" % "provided")
 ```
 
+## Use
+
 For a class to have it's own `Codec`generated it must be annotated with `@MongoEntity`.
+The VertigoCodecRegistry must be registered in the followingWay
+
+```java
+mongoDatabase.withCodecRegistry(new VertigoCodecRegistry());
+```
+
 
 ## Capabilities
 
