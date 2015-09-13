@@ -20,4 +20,5 @@ publishing {
 }
 dependencies {
     compile 'org.mongodb:mongo-java-driver:3.0.2'
+    compile 'com.google.guava:guava:18.0'
 }

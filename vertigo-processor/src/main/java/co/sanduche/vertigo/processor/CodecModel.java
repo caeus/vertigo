@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * Created by caeus on 6/09/15.
  */
-public class CodecModel {
+public class CodecModel<T> {
     private String className;
     private String packageName;
-    private List<FieldModel> fields;
+    private List<PropertyModel> properties;
 
     public String getClassName() {
         return className;
@@ -26,20 +26,21 @@ public class CodecModel {
         this.packageName = packageName;
     }
 
-    public List<FieldModel> getFields() {
-        return fields;
+    public List<PropertyModel> getProperties() {
+        return properties;
     }
 
-    public void setFields(List<FieldModel> fields) {
-        this.fields = fields;
+    public void setProperties(List<PropertyModel> fields) {
+        this.properties = fields;
     }
 
     @Override
     public String toString() {
+
         return "CodecModel{" +
                 "className='" + className + '\'' +
                 ", packageName='" + packageName + '\'' +
-                ", fields=" + fields +
+                ", properties=" + properties +
                 '}';
     }
 }

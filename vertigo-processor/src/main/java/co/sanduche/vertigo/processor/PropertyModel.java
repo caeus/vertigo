@@ -3,11 +3,13 @@ package co.sanduche.vertigo.processor;
 /**
  * Created by caeus on 6/09/15.
  */
-public class FieldModel {
+public class PropertyModel {
     private String name;
     private String clazz;
+    private String type;
     private String getter;
     private String setter;
+
 
     public String getName() {
         return name;
@@ -23,6 +25,14 @@ public class FieldModel {
 
     public void setClazz(String clazz) {
         this.clazz = clazz;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getGetter() {
@@ -41,12 +51,15 @@ public class FieldModel {
         this.setter = setter;
     }
 
+
     @Override
     public String toString() {
-        return "FieldModel{" +
+        return "PropertyModel{" +
                 "clazz='" + clazz + '\'' +
                 ", getter='" + getter + '\'' +
                 ", setter='" + setter + '\'' +
                 '}';
     }
+
+
 }
