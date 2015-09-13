@@ -21,9 +21,7 @@ public abstract class VertigoCodec<T> implements Codec<T> {
     private final VertigoCodecRegistry vertigoCodecRegistry;
 
     public VertigoCodec(VertigoCodecRegistry vertigoCodecRegistry) {
-
         this.vertigoCodecRegistry = vertigoCodecRegistry;
-
     }
 
     public <G> void writeProperty(final BsonWriter writer,
@@ -34,7 +32,6 @@ public abstract class VertigoCodec<T> implements Codec<T> {
             writeValue(writer, value, typeToken, encoderContext);
         }
     }
-
 
     private <G> void writeValue(final BsonWriter writer, final G value, final TypeToken<G> typeToken, final EncoderContext encoderContext) {
         if (value == null) {
@@ -59,6 +56,7 @@ public abstract class VertigoCodec<T> implements Codec<T> {
             @Override
             public void accept(BsonReader reader) {
                 //??
+                reader.readEndDocument();//??
             }
         },
         DOUBLE {
@@ -195,5 +193,4 @@ public abstract class VertigoCodec<T> implements Codec<T> {
             BsonSkipper.valueOf(reader.getCurrentBsonType().name()).accept(reader);
         }
     }
-
 }

@@ -19,9 +19,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -145,10 +143,7 @@ public class VertigoProcessor extends AbstractProcessor {
             JavaFileObject jo = processingEnv.getFiler().createSourceFile((packageName.trim().length() > 0 ? packageName + "." : "") + codecModel.getClassName() + "$$Codec", typeElement);
             Writer writer = jo.openWriter();
             template.process(codecModel, writer);
-
-            StringWriter out = new StringWriter();
-            template.process(codecModel, out);
-
+            template.process(codecModel, new PrintWriter(System.out));
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,9 +153,7 @@ public class VertigoProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        String canonicalName = MongoEntity.class.getCanonicalName();
-
-        return new HashSet<>(Arrays.asList(canonicalName));
+        return new HashSet<>(Arrays.asList(MongoEntity.class.getCanonicalName()));
     }
 
     @Override
@@ -168,7 +161,7 @@ public class VertigoProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
-    private static enum MethodRole {
+    private enum MethodRole {
         GETTER, SETTER;
     }
 
