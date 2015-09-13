@@ -15,7 +15,7 @@ import com.google.common.reflect.TypeToken;
 public class ${className}$$Codec extends VertigoCodec<${className}>{
 
     <#list properties as property>
-    private TypeToken<${property.type}> ${property.name}=new TypeToken<${property.type}>(){};
+    private TypeToken<${property.type}> $${property.name}$=new TypeToken<${property.type}>(){};
     </#list>
 
     public ${className}$$Codec(VertigoCodecRegistry vertigoCodecRegistry){
@@ -32,7 +32,7 @@ public class ${className}$$Codec extends VertigoCodec<${className}>{
             String name=bsonReader.readName();
             switch(name){
                 <#list properties as property>
-                case "${property.name}":target.${property.setter}(readValue(bsonReader,${property.name},decoderContext));
+                case "${property.name}":target.${property.setter}(readValue(bsonReader,$${property.name}$,decoderContext));
                     break;
                 </#list>
                 default:skipValue(bsonReader,decoderContext);break;
@@ -49,7 +49,7 @@ public class ${className}$$Codec extends VertigoCodec<${className}>{
         bsonWriter.writeStartDocument();
         <#if properties?size gt 0>
         <#list properties as property>
-        writeProperty(bsonWriter,"${property.name}",target.${property.getter}(),${property.name},encoderContext.getChildContext());
+        writeProperty(bsonWriter,"${property.name}",target.${property.getter}(),$${property.name}$,encoderContext.getChildContext());
         </#list>
         </#if>
         bsonWriter.writeEndDocument();
